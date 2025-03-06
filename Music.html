@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Música</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/node-vibrant/3.1.6/vibrant.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            transition: background-color 0.5s ease;
+        }
+        .player {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+        .cover {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            align-self: center;
+        }
+        .controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .progress-container {
+            width: 100%;
+            background: #666;
+            height: 5px;
+            border-radius: 5px;
+            margin: 10px 0;
+            cursor: pointer;
+            position: relative;
+        }
+        .progress-bar {
+            height: 5px;
+            background: #1db954;
+            width: 0;
+            border-radius: 5px;
+        }
+        .time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="player">
+        <img id="cover" class="cover" src="https://via.placeholder.com/200" alt="Portada del álbum">
+        <h2 id="song-title">Título de la Canción</h2>
+        <audio id="audio"></audio>
+        <div class="time">
+            <span id="current-time">0:00</span>
+            <span id="total-duration">0:00</span>
+        </div>
+        <div class="progress-container" onclick="setProgress(event)">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="controls">
+            <button onclick="prevSong()">⏮</button>
+            <button onclick="togglePlayPause()">▶️</button>
+            <button onclick="nextSong()">⏭</button>
+        </div>
+    </div>
+    
+    <script>
+        const audio = document.getElementById('audio');
+        const cover = document.getElementById('cover');
+        const title = document.getElementById('song-title');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.querySelector('.progress-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalDurationEl = document.getElementById('total-duration');
+    
+        const songs = [
+            { title: "Oye Bebe, Sain Nt", src: "https://www.cjoint.com/doc/24_10/NJAsIFmkU1f_Oye-bebe-Sain-Nt-Kerim-Music.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469294442_122180763968093529_2318484554560596288_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=-MaUV3J70FMQ7kNvgG_cU4l&_nc_oc=AdjB6i5ED_wG4-0J3xzWN4Rzjbx_WkB_TJHHCKVy7Q8dmoQb1LtqDxDjV9cWwVnprjcdumifCqLAKtA2SSkAqYmQ&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=APf6pY0wNfPwlJN8c-SybBv&oh=00_AYEI0KepHazWRJvxn6mKAt_BILSfX1YvYrJzDi07RgWc-A&oe=67CFF5BF" },
+            { title: "Ritmos Malandros, Onder King", src: "https://www.cjoint.com/doc/24_11/NKdtiAEbJfQ_3-Ritmos-malandros-Odner-King.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469209732_122180763320093529_1738609717332775298_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=RZ8sTAEMKLYQ7kNvgGOa-vg&_nc_oc=AdhLkzHHSZ9OMjB9MOpvJo-syDUCUVnfbGEni8hzVsSPHE8XzMqpUoU0FGtG-F0s-ZuOBp7us1v9ZcNyZoTrTIUj&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=AjeS_X_I7O-NMjZ9--FCOmO&oh=00_AYFegrh5xp5j1v5RdvIAtHCes5OuYrIBr1Mca1d-c2BDUw&oe=67D00434" },
+            { title: "Modo avion, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKdtvXSFvdQ_1-Modo-avion-Dany-Zm-El-rencuentro-flac.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/469526904_122180756942093529_4545572876628752884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=_zFJ3-wgZXEQ7kNvgG9UHR8&_nc_oc=AdhkgtJQnagYHt-xFYwaO6mNRWmneH-HolT02rkEUVqgireF70H09EmGL7D2g9jguCgfNTBsn8N2cIhU3NZhQ-5j&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AZnflSBwn6dKB_vC1IiPJBy&oh=00_AYEU7gaRQlz7cw7GNtzn4KLAkoBo2kNcN4ZsdDJD5oEIRQ&oe=67CFF329" }
+        ];
+        
+        let currentSongIndex = Math.floor(Math.random() * songs.length);  // Selección aleatoria
+    
+        function updatePlayer() {
+            audio.src = songs[currentSongIndex].src;
+            cover.src = songs[currentSongIndex].cover;
+            title.textContent = songs[currentSongIndex].title;
+            audio.load();
+            audio.play().catch(error => console.log("Autoplay bloqueado: ", error));
+            updateBackgroundColor();
+        }
+    
+        function updateBackgroundColor() {
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = songs[currentSongIndex].cover;
+    
+            img.onload = () => {
+                Vibrant.from(img).getPalette().then(palette => {
+                    if (palette.DarkVibrant) {
+                        document.body.style.backgroundColor = palette.DarkVibrant.hex;
+                    } else if (palette.Vibrant) {
+                        document.body.style.backgroundColor = palette.Vibrant.hex;
+                    }
+                });
+            };
+        }
+    
+        function togglePlayPause() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+    
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            updatePlayer();
+        }
+    
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            updatePlayer();
+        }
+    
+        function updateProgress() {
+            const { duration, currentTime } = audio;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            currentTimeEl.textContent = formatTime(currentTime);
+            totalDurationEl.textContent = formatTime(duration);
+        }
+    
+        function setProgress(event) {
+            const width = progressContainer.clientWidth;
+            const clickX = event.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+    
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+    
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('loadedmetadata', updateProgress);
+        audio.addEventListener('ended', nextSong); // Aquí añadimos el evento
+        updatePlayer();
+    </script>
+    
+</body>
+</html>
