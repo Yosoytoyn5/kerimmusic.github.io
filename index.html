@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animación de Bienvenida</title>
+    <style>
+        body {
+            background-color: rgb(172, 162, 162);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .banner {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            animation: fadeInOut 2s infinite alternate;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            color: white;
+            background-color: #f7bd00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #000000;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .button {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="banner" src="https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/476884762_122190294842093529_7928652147433028925_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=jZ1hr2RRzcEQ7kNvgEItkon&_nc_oc=AdijXfhAUAVlajbuSIg3MZ_gRp0omqNR8HFyr-2vdzFV3pVp12-w08FgYRDstvA1B8jslkDGqHS5hqYtl-AUFtKe&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AE46avUgR56AAtZV-J1irYy&oh=00_AYBWw8-6nme0zjaSfbE0plVsYGzbdCauRp94gq6jADRdXw&oe=67CFDE1C" alt="Banner de Kerim Music">
+        <h1>KERIM MUSIC</h1>
+        <p>Bienvenidos al estudio de grabación.</p>
+        <a href="segunda.html">
+            <button class="button">ENTRAR</button>
+        </a>
+        
+    </div>
+</body>
+</html>
