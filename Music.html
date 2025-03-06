@@ -15,6 +15,7 @@
             background-color: #282c34;
             color: white;
             transition: background-color 0.5s ease;
+            flex-direction: column;
         }
         .player {
             display: flex;
@@ -22,8 +23,8 @@
             text-align: center;
         }
         .cover {
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             border-radius: 10px;
             margin-bottom: 10px;
             align-self: center;
@@ -56,9 +57,45 @@
             justify-content: space-between;
             font-size: 12px;
         }
+        .shuffle-btn {
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+        }
+        .search-bar {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            border-radius: 5px;
+            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .search-bar:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #1db954;
+            box-shadow: 0 0 10px rgba(29, 185, 84, 0.7);
+        }
+        .search-btn {
+            background-color: #1db954;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div>
+        <input type="text" id="search" class="search-bar" placeholder="Buscar canción por título">
+        <button class="search-btn" onclick="searchSong()">Buscar</button>
+    </div>
+    
     <div class="player">
         <img id="cover" class="cover" src="https://via.placeholder.com/200" alt="Portada del álbum">
         <h2 id="song-title">Título de la Canción</h2>
@@ -75,8 +112,10 @@
             <button onclick="togglePlayPause()">▶️</button>
             <button onclick="nextSong()">⏭</button>
         </div>
+        <!-- Botón para alternar entre modo ordenado y aleatorio -->
+        <button class="shuffle-btn" onclick="toggleShuffle()">🔀</button>
     </div>
-    
+
     <script>
         const audio = document.getElementById('audio');
         const cover = document.getElementById('cover');
@@ -85,15 +124,18 @@
         const progressContainer = document.querySelector('.progress-container');
         const currentTimeEl = document.getElementById('current-time');
         const totalDurationEl = document.getElementById('total-duration');
-    
+        const shuffleBtn = document.querySelector('.shuffle-btn');
+        const searchInput = document.getElementById('search');
+        
         const songs = [
             { title: "Oye Bebe, Sain Nt", src: "https://www.cjoint.com/doc/24_10/NJAsIFmkU1f_Oye-bebe-Sain-Nt-Kerim-Music.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469294442_122180763968093529_2318484554560596288_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=-MaUV3J70FMQ7kNvgG_cU4l&_nc_oc=AdjB6i5ED_wG4-0J3xzWN4Rzjbx_WkB_TJHHCKVy7Q8dmoQb1LtqDxDjV9cWwVnprjcdumifCqLAKtA2SSkAqYmQ&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=APf6pY0wNfPwlJN8c-SybBv&oh=00_AYEI0KepHazWRJvxn6mKAt_BILSfX1YvYrJzDi07RgWc-A&oe=67CFF5BF" },
             { title: "Ritmos Malandros, Onder King", src: "https://www.cjoint.com/doc/24_11/NKdtiAEbJfQ_3-Ritmos-malandros-Odner-King.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469209732_122180763320093529_1738609717332775298_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=RZ8sTAEMKLYQ7kNvgGOa-vg&_nc_oc=AdhLkzHHSZ9OMjB9MOpvJo-syDUCUVnfbGEni8hzVsSPHE8XzMqpUoU0FGtG-F0s-ZuOBp7us1v9ZcNyZoTrTIUj&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=AjeS_X_I7O-NMjZ9--FCOmO&oh=00_AYFegrh5xp5j1v5RdvIAtHCes5OuYrIBr1Mca1d-c2BDUw&oe=67D00434" },
             { title: "Modo avion, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKdtvXSFvdQ_1-Modo-avion-Dany-Zm-El-rencuentro-flac.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/469526904_122180756942093529_4545572876628752884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=_zFJ3-wgZXEQ7kNvgG9UHR8&_nc_oc=AdhkgtJQnagYHt-xFYwaO6mNRWmneH-HolT02rkEUVqgireF70H09EmGL7D2g9jguCgfNTBsn8N2cIhU3NZhQ-5j&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AZnflSBwn6dKB_vC1IiPJBy&oh=00_AYEU7gaRQlz7cw7GNtzn4KLAkoBo2kNcN4ZsdDJD5oEIRQ&oe=67CFF329" }
         ];
         
-        let currentSongIndex = Math.floor(Math.random() * songs.length);  // Selección aleatoria
-    
+        let currentSongIndex = 0;  // Selección inicial
+        let shuffle = false; // Estado de la reproducción aleatoria
+        
         function updatePlayer() {
             audio.src = songs[currentSongIndex].src;
             cover.src = songs[currentSongIndex].cover;
@@ -102,12 +144,12 @@
             audio.play().catch(error => console.log("Autoplay bloqueado: ", error));
             updateBackgroundColor();
         }
-    
+        
         function updateBackgroundColor() {
             const img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = songs[currentSongIndex].cover;
-    
+        
             img.onload = () => {
                 Vibrant.from(img).getPalette().then(palette => {
                     if (palette.DarkVibrant) {
@@ -118,7 +160,7 @@
                 });
             };
         }
-    
+        
         function togglePlayPause() {
             if (audio.paused) {
                 audio.play();
@@ -126,17 +168,25 @@
                 audio.pause();
             }
         }
-    
+        
         function nextSong() {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            if (shuffle) {
+                currentSongIndex = Math.floor(Math.random() * songs.length);
+            } else {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+            }
             updatePlayer();
         }
-    
+        
         function prevSong() {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            if (shuffle) {
+                currentSongIndex = Math.floor(Math.random() * songs.length);
+            } else {
+                currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            }
             updatePlayer();
         }
-    
+        
         function updateProgress() {
             const { duration, currentTime } = audio;
             const progressPercent = (currentTime / duration) * 100;
@@ -144,24 +194,44 @@
             currentTimeEl.textContent = formatTime(currentTime);
             totalDurationEl.textContent = formatTime(duration);
         }
-    
+        
         function setProgress(event) {
             const width = progressContainer.clientWidth;
             const clickX = event.offsetX;
             const duration = audio.duration;
             audio.currentTime = (clickX / width) * duration;
         }
-    
+        
         function formatTime(time) {
             const minutes = Math.floor(time / 60);
             const seconds = Math.floor(time % 60);
             return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
     
+        function toggleShuffle() {
+            shuffle = !shuffle;
+            shuffleBtn.textContent = shuffle ? "🔁" : "🔀";  // Cambia el ícono según el estado
+        }
+        
+        function searchSong() {
+            const query = searchInput.value.toLowerCase();
+            const matchedSongIndex = songs.findIndex(song => song.title.toLowerCase().includes(query));
+            
+            if (matchedSongIndex !== -1) {
+                currentSongIndex = matchedSongIndex;
+                updatePlayer();
+            }
+        }
+        
         audio.addEventListener('timeupdate', updateProgress);
         audio.addEventListener('loadedmetadata', updateProgress);
         audio.addEventListener('ended', nextSong); // Aquí añadimos el evento
-        updatePlayer();
+    
+        // Activar modo shuffle automáticamente al cargar la página
+        shuffle = true;
+        shuffleBtn.textContent = "🔁";  // Cambia el ícono de shuffle al inicio
+        currentSongIndex = Math.floor(Math.random() * songs.length);
+        updatePlayer();  // Inicia la canción aleatoria
     </script>
     
 </body>
