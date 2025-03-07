@@ -117,7 +117,7 @@
         </div>
         <div class="controls">
             <button onclick="prevSong()">⏮</button>
-            <button onclick="togglePlayPause()">▶</button>
+            <button id="play-pause-btn" onclick="togglePlayPause()">▶</button>
             <button onclick="nextSong()">⏭</button>
         </div>
         <button class="shuffle-btn" onclick="toggleShuffle()">Shuffle</button>
@@ -136,7 +136,7 @@
         
         const songs = [
             { title: "Oye Bebe, Sain Nt", src: "https://www.cjoint.com/doc/24_10/NJAsIFmkU1f_Oye-bebe-Sain-Nt-Kerim-Music.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469294442_122180763968093529_2318484554560596288_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=-MaUV3J70FMQ7kNvgG_cU4l&_nc_oc=AdjB6i5ED_wG4-0J3xzWN4Rzjbx_WkB_TJHHCKVy7Q8dmoQb1LtqDxDjV9cWwVnprjcdumifCqLAKtA2SSkAqYmQ&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=APf6pY0wNfPwlJN8c-SybBv&oh=00_AYEI0KepHazWRJvxn6mKAt_BILSfX1YvYrJzDi07RgWc-A&oe=67CFF5BF" },
-            { title: "Reyes magos", src: "https://www.cjoint.com/doc/25_01/OAduLjDAM2S_Ya-Vienen-Los-Reyes-Magos.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/481903517_122195213156093529_7678889840714831711_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=HFw3IXKmleEQ7kNvgFqIZKT&_nc_oc=Adi_oVwMUaGUSKZrhUz2naWBYPl-8FvPT_2Rp2jLbjc4V6R7cbFz1G4yg90DusPnh_I4P5WoxUmKBZTOf2iKxHij&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AqdzoaMY16rHf8pIzEoDZpY&oh=00_AYHdR0XOKl9gBc5ZlPCn4h-cEMjQ_UI8hjhKIen0dsDANw&oe=67D02A9F" },
+            { title: "Ya vienen los reyes magos, keim Music", src: "https://www.cjoint.com/doc/25_01/OAduLjDAM2S_Ya-Vienen-Los-Reyes-Magos.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/481903517_122195213156093529_7678889840714831711_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=HFw3IXKmleEQ7kNvgFqIZKT&_nc_oc=Adi_oVwMUaGUSKZrhUz2naWBYPl-8FvPT_2Rp2jLbjc4V6R7cbFz1G4yg90DusPnh_I4P5WoxUmKBZTOf2iKxHij&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AqdzoaMY16rHf8pIzEoDZpY&oh=00_AYHdR0XOKl9gBc5ZlPCn4h-cEMjQ_UI8hjhKIen0dsDANw&oe=67D02A9F" },
             { title: "Ritmos Malandros, Onder King", src: "https://www.cjoint.com/doc/24_11/NKdtiAEbJfQ_3-Ritmos-malandros-Odner-King.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469209732_122180763320093529_1738609717332775298_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=RZ8sTAEMKLYQ7kNvgGOa-vg&_nc_oc=AdhLkzHHSZ9OMjB9MOpvJo-syDUCUVnfbGEni8hzVsSPHE8XzMqpUoU0FGtG-F0s-ZuOBp7us1v9ZcNyZoTrTIUj&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=AjeS_X_I7O-NMjZ9--FCOmO&oh=00_AYFegrh5xp5j1v5RdvIAtHCes5OuYrIBr1Mca1d-c2BDUw&oe=67D00434" },
             { title: "Modo avion, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKdtvXSFvdQ_1-Modo-avion-Dany-Zm-El-rencuentro-flac.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/469526904_122180756942093529_4545572876628752884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=_zFJ3-wgZXEQ7kNvgG9UHR8&_nc_oc=AdhkgtJQnagYHt-xFYwaO6mNRWmneH-HolT02rkEUVqgireF70H09EmGL7D2g9jguCgfNTBsn8N2cIhU3NZhQ-5j&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AZnflSBwn6dKB_vC1IiPJBy&oh=00_AYEU7gaRQlz7cw7GNtzn4KLAkoBo2kNcN4ZsdDJD5oEIRQ&oe=67CFF329" },
             { title: "Me estoy muriendo, Clave 462", src: "https://www.cjoint.com/doc/24_11/NKgbdc5rOko_Me-estoy-muriendo-clave-462.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/483488957_122195212382093529_2576876991791910487_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oVcE2hGGuF8Q7kNvgEtVE-T&_nc_oc=Adg3lt1F2_-gz0yf6IlPWF9kE-CopZoQ4dG8xbMAlackBwpqfUVBfB6ZAWGDCsqp2ngg7aWzwLS0dM5VNd5Ai2sH&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=ALUPZhj5JNB7Zl5023MMSjm&oh=00_AYHhG40crHMCDFJxFwG6U-_M5eTaEoZKpemvC_D1KYRjSQ&oe=67D02C03" },
@@ -171,15 +171,24 @@
         }
 
         function togglePlayPause() {
-    const playPauseButton = document.querySelector('.controls button:nth-child(2)'); // Seleccionamos el botón de play/pause
+    const playPauseButton = document.getElementById('play-pause-btn'); 
     if (audio.paused) {
         audio.play();
-        playPauseButton.textContent = '⏸'; // Cambiar a pause
     } else {
         audio.pause();
-        playPauseButton.textContent = '▶'; // Cambiar a play
     }
 }
+
+// Aseguramos que el botón se actualice cuando el audio cambia de estado
+audio.addEventListener('pause', () => {
+    document.getElementById('play-pause-btn').textContent = '⏸';
+});
+
+audio.addEventListener('play', () => {
+    document.getElementById('play-pause-btn').textContent = '▶';
+});
+
+
 
         
         function nextSong() {
