@@ -16,7 +16,6 @@
             color: white;
             transition: background-color 0.5s ease;
             flex-direction: column;
-            margin: 0;
         }
         .player {
             display: flex;
@@ -42,7 +41,7 @@
             border-radius: 10px;
             margin-bottom: 10px;
             align-self: center;
-            animation: fadeInScale 1.5s ease-out;
+            animation: fadeInScale 1.5s ease-out;  /* Añadimos la animación aquí */
         }
 
         .controls button {
@@ -74,13 +73,13 @@
             font-size: 12px;
         }
         .shuffle-btn {
-            font-size: 18px;
-            color: white;
-            cursor: pointer;
-            background: none;
-            border: none;
-            text-transform: uppercase;
-        }
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-transform: uppercase;
+}
 
         .search-bar {
             margin: 20px;
@@ -93,72 +92,14 @@
             color: white;
             outline: none;
             transition: all 0.3s ease;
-            display: none;
+            display: none;  /* Inicialmente oculto */
         }
-
         .search-bar:focus {
             background: rgba(255, 255, 255, 0.2);
             border-color: #f3f3f3;
             box-shadow: 0 0 10px rgba(29, 185, 84, 0.7);
         }
-
-        .most-listened-btn {
-            background-color: #000000;
-            color: #ffffff;
-            font-size: 16px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            text-transform: uppercase;
-            transition: background-color 0.3s ease;
-        }
-
-        .most-listened-btn:hover {
-            background-color: #ddd;
-        }
-
-        /* Estilos para la ventana flotante (modal) */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-        .modal-content {
-            background-color: #333;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-        }
-        .modal-content img {
-            width: 200px;
-            height: 200px;
-            margin-bottom: 10px;
-        }
-        .modal-content h2 {
-            font-size: 20px;
-            margin: 10px 0;
-        }
-        .modal-content p {
-            font-size: 18px;
-        }
-        .close-btn {
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+       
     </style>
 </head>
 <body>
@@ -180,20 +121,7 @@
             <button onclick="nextSong()">⏭</button>
         </div>
         <button class="shuffle-btn" onclick="toggleShuffle()">Shuffle</button>
-    </div>
 
-    <div class="banner">
-        <button class="most-listened-btn" onclick="showMostListened()">Lo más escuchado</button>
-    </div>
-
-    <!-- Modal para mostrar lo más escuchado -->
-    <div id="most-listened-modal" class="modal">
-        <div class="modal-content">
-            <img id="most-listened-cover" src="" alt="Portada del álbum">
-            <h2 id="most-listened-title"></h2>
-            <p>Oyentes: <span id="most-listened-listeners">0</span></p>
-            <button class="close-btn" onclick="closeModal()">Cerrar</button>
-        </div>
     </div>
 
     <script>
@@ -205,25 +133,18 @@
         const currentTimeEl = document.getElementById('current-time');
         const totalDurationEl = document.getElementById('total-duration');
         const shuffleBtn = document.querySelector('.shuffle-btn');
-        const mostListenedModal = document.getElementById('most-listened-modal');
-        const mostListenedCover = document.getElementById('most-listened-cover');
-        const mostListenedTitle = document.getElementById('most-listened-title');
-        const mostListenedListeners = document.getElementById('most-listened-listeners');
-    
+        
         const songs = [
-            { title: "Oye Bebe, Sain Nt", src: "https://www.cjoint.com/doc/24_10/NJAsIFmkU1f_Oye-bebe-Sain-Nt-Kerim-Music.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469294442_122180763968093529_2318484554560596288_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=-MaUV3J70FMQ7kNvgG_cU4l&_nc_oc=AdjB6i5ED_wG4-0J3xzWN4Rzjbx_WkB_TJHHCKVy7Q8dmoQb1LtqDxDjV9cWwVnprjcdumifCqLAKtA2SSkAqYmQ&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=APf6pY0wNfPwlJN8c-SybBv&oh=00_AYEI0KepHazWRJvxn6mKAt_BILSfX1YvYrJzDi07RgWc-A&oe=67CFF5BF", listeners: 0 },
-            { title: "Ya vienen los reyes magos, keim Music", src: "https://www.cjoint.com/doc/25_01/OAduLjDAM2S_Ya-Vienen-Los-Reyes-Magos.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/481903517_122195213156093529_7678889840714831711_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=HFw3IXKmleEQ7kNvgFqIZKT&_nc_oc=Adi_oVwMUaGUSKZrhUz2naWBYPl-8FvPT_2Rp2jLbjc4V6R7cbFz1G4yg90DusPnh_I4P5WoxUmKBZTOf2iKxHij&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AqdzoaMY16rHf8pIzEoDZpY&oh=00_AYHdR0XOKl9gBc5ZlPCn4h-cEMjQ_UI8hjhKIen0dsDANw&oe=67D02A9F", listeners: 0 },
-            { title: "Ritmos Malandros, Onder King", src: "https://www.cjoint.com/doc/24_11/NKdtiAEbJfQ_3-Ritmos-malandros-Odner-King.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469209732_122180763320093529_1738609717332775298_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=RZ8sTAEMKLYQ7kNvgGOa-vg&_nc_oc=AdhLkzHHSZ9OMjB9MOpvJo-syDUCUVnfbGEni8hzVsSPHE8XzMqpUoU0FGtG-F0s-ZuOBp7us1v9ZcNyZoTrTIUj&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=AjeS_X_I7O-NMjZ9--FCOmO&oh=00_AYFegrh5xp5j1v5RdvIAtHCes5OuYrIBr1Mca1d-c2BDUw&oe=67D00434", listeners: 0 },
-            { title: "Modo avion, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKdtvXSFvdQ_1-Modo-avion-Dany-Zm-El-rencuentro-flac.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/469526904_122180756942093529_4545572876628752884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=_zFJ3-wgZXEQ7kNvgG9UHR8&_nc_oc=AdhkgtJQnagYHt-xFYwaO6mNRWmneH-HolT02rkEUVqgireF70H09EmGL7D2g9jguCgfNTBsn8N2cIhU3NZhQ-5j&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AZnflSBwn6dKB_vC1IiPJBy&oh=00_AYEU7gaRQlz7cw7GNtzn4KLAkoBo2kNcN4ZsdDJD5oEIRQ&oe=67CFF329", listeners: 0 },
-            { title: "Me estoy muriendo, Clave 462", src: "https://www.cjoint.com/doc/24_11/NKgbdc5rOko_Me-estoy-muriendo-clave-462.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/483488957_122195212382093529_2576876991791910487_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oVcE2hGGuF8Q7kNvgEtVE-T&_nc_oc=Adg3lt1F2_-gz0yf6IlPWF9kE-CopZoQ4dG8xbMAlackBwpqfUVBfB6ZAWGDCsqp2ngg7aWzwLS0dM5VNd5Ai2sH&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=ALUPZhj5JNB7Zl5023MMSjm&oh=00_AYHhG40crHMCDFJxFwG6U-_M5eTaEoZKpemvC_D1KYRjSQ&oe=67D02C03", listeners: 0 },
+            { title: "Oye Bebe, Sain Nt", src: "https://www.cjoint.com/doc/24_10/NJAsIFmkU1f_Oye-bebe-Sain-Nt-Kerim-Music.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469294442_122180763968093529_2318484554560596288_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=-MaUV3J70FMQ7kNvgG_cU4l&_nc_oc=AdjB6i5ED_wG4-0J3xzWN4Rzjbx_WkB_TJHHCKVy7Q8dmoQb1LtqDxDjV9cWwVnprjcdumifCqLAKtA2SSkAqYmQ&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=APf6pY0wNfPwlJN8c-SybBv&oh=00_AYEI0KepHazWRJvxn6mKAt_BILSfX1YvYrJzDi07RgWc-A&oe=67CFF5BF" },
+            { title: "Ya vienen los reyes magos, keim Music", src: "https://www.cjoint.com/doc/25_01/OAduLjDAM2S_Ya-Vienen-Los-Reyes-Magos.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/481903517_122195213156093529_7678889840714831711_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=HFw3IXKmleEQ7kNvgFqIZKT&_nc_oc=Adi_oVwMUaGUSKZrhUz2naWBYPl-8FvPT_2Rp2jLbjc4V6R7cbFz1G4yg90DusPnh_I4P5WoxUmKBZTOf2iKxHij&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AqdzoaMY16rHf8pIzEoDZpY&oh=00_AYHdR0XOKl9gBc5ZlPCn4h-cEMjQ_UI8hjhKIen0dsDANw&oe=67D02A9F" },
+            { title: "Ritmos Malandros, Onder King", src: "https://www.cjoint.com/doc/24_11/NKdtiAEbJfQ_3-Ritmos-malandros-Odner-King.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469209732_122180763320093529_1738609717332775298_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=RZ8sTAEMKLYQ7kNvgGOa-vg&_nc_oc=AdhLkzHHSZ9OMjB9MOpvJo-syDUCUVnfbGEni8hzVsSPHE8XzMqpUoU0FGtG-F0s-ZuOBp7us1v9ZcNyZoTrTIUj&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=AjeS_X_I7O-NMjZ9--FCOmO&oh=00_AYFegrh5xp5j1v5RdvIAtHCes5OuYrIBr1Mca1d-c2BDUw&oe=67D00434" },
+            { title: "Modo avion, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKdtvXSFvdQ_1-Modo-avion-Dany-Zm-El-rencuentro-flac.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/469526904_122180756942093529_4545572876628752884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=_zFJ3-wgZXEQ7kNvgG9UHR8&_nc_oc=AdhkgtJQnagYHt-xFYwaO6mNRWmneH-HolT02rkEUVqgireF70H09EmGL7D2g9jguCgfNTBsn8N2cIhU3NZhQ-5j&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AZnflSBwn6dKB_vC1IiPJBy&oh=00_AYEU7gaRQlz7cw7GNtzn4KLAkoBo2kNcN4ZsdDJD5oEIRQ&oe=67CFF329" },
+            { title: "Me estoy muriendo, Clave 462", src: "https://www.cjoint.com/doc/24_11/NKgbdc5rOko_Me-estoy-muriendo-clave-462.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/483488957_122195212382093529_2576876991791910487_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oVcE2hGGuF8Q7kNvgEtVE-T&_nc_oc=Adg3lt1F2_-gz0yf6IlPWF9kE-CopZoQ4dG8xbMAlackBwpqfUVBfB6ZAWGDCsqp2ngg7aWzwLS0dM5VNd5Ai2sH&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=ALUPZhj5JNB7Zl5023MMSjm&oh=00_AYHhG40crHMCDFJxFwG6U-_M5eTaEoZKpemvC_D1KYRjSQ&oe=67D02C03" },
         ];
-    
-        let currentSongIndex = Math.floor(Math.random() * songs.length);
+        
+        let currentSongIndex = 0;
         let shuffle = false;
-    
-        // Obtener la última actualización de oyentes desde el localStorage
-        let lastUpdated = localStorage.getItem('lastUpdated') || Date.now();
-    
+        
         function updatePlayer() {
             audio.src = songs[currentSongIndex].src;
             cover.src = songs[currentSongIndex].cover;
@@ -231,14 +152,13 @@
             audio.load();
             audio.play().catch(error => console.log("Autoplay bloqueado: ", error));
             updateBackgroundColor();
-            updateListeners();
         }
-    
+
         function updateBackgroundColor() {
             const img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = songs[currentSongIndex].cover;
-    
+        
             img.onload = () => {
                 Vibrant.from(img).getPalette().then(palette => {
                     if (palette.DarkVibrant) {
@@ -249,111 +169,81 @@
                 });
             };
         }
-    
-        function updateListeners() {
-            // Si han pasado más de 12 horas, disminuir los oyentes
-            const currentTime = Date.now();
-            const timeDifference = currentTime - lastUpdated;
-            if (timeDifference > 12 * 60 * 60 * 1000) { // 12 horas en milisegundos
-                songs.forEach(song => {
-                    if (song.listeners > 0) {
-                        song.listeners -= 1;
-                    }
-                });
-                localStorage.setItem('lastUpdated', currentTime);
-            }
-        }
-    
+
         function togglePlayPause() {
-    const playPauseButton = document.getElementById('play-pause-btn');
+    const playPauseButton = document.getElementById('play-pause-btn'); 
     if (audio.paused) {
         audio.play();
-        playPauseButton.textContent = '⏸';  // Cambiar a pausa cuando se está reproduciendo
     } else {
         audio.pause();
-        playPauseButton.textContent = '▶';  // Cambiar a play cuando se está pausado
     }
 }
 
+// Aseguramos que el botón se actualice cuando el audio cambia de estado
+audio.addEventListener('pause', () => {
+    document.getElementById('play-pause-btn').textContent = '⏸';
+});
 
-    
-        audio.addEventListener('ended', () => {
-            nextSong();  // Cambia a la siguiente canción cuando termine la actual
-        });
+audio.addEventListener('play', () => {
+    document.getElementById('play-pause-btn').textContent = '▶';
+});
 
+
+
+        
         function nextSong() {
             if (shuffle) {
                 currentSongIndex = Math.floor(Math.random() * songs.length);
             } else {
                 currentSongIndex = (currentSongIndex + 1) % songs.length;
             }
-            songs[currentSongIndex].listeners += 1;
-            localStorage.setItem('lastUpdated', Date.now()); // Actualizar el tiempo de la última vez que se incrementaron los oyentes
             updatePlayer();
         }
 
-    
-        audio.addEventListener('play', () => {
-            document.getElementById('play-pause-btn').textContent = '▶';
-        });
-    
-        function nextSong() {
-            if (shuffle) {
-                currentSongIndex = Math.floor(Math.random() * songs.length);
-            } else {
-                currentSongIndex = (currentSongIndex + 1) % songs.length;
-            }
-            songs[currentSongIndex].listeners += 1;
-            localStorage.setItem('lastUpdated', Date.now()); // Actualizar el tiempo de la última vez que se incrementaron los oyentes
-            updatePlayer();
-        }
-    
         function prevSong() {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            if (shuffle) {
+                currentSongIndex = Math.floor(Math.random() * songs.length);
+            } else {
+                currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            }
             updatePlayer();
         }
-    
-        function setProgress(event) {
-            const progressWidth = progressContainer.offsetWidth;
-            const clickPosition = event.offsetX;
-            const duration = audio.duration;
-            audio.currentTime = (clickPosition / progressWidth) * duration;
+
+        function updateProgress() {
+            const { duration, currentTime } = audio;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            currentTimeEl.textContent = formatTime(currentTime);
+            totalDurationEl.textContent = formatTime(duration);
         }
-    
-        audio.addEventListener('timeupdate', () => {
-            const progress = (audio.currentTime / audio.duration) * 100;
-            progressBar.style.width = `${progress}%`;
-            currentTimeEl.textContent = formatTime(audio.currentTime);
-            totalDurationEl.textContent = formatTime(audio.duration);
-        });
-    
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = Math.floor(seconds % 60);
-            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        
+        function setProgress(event) {
+            const width = progressContainer.clientWidth;
+            const clickX = event.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
     
         function toggleShuffle() {
             shuffle = !shuffle;
-            shuffleBtn.textContent = shuffle ? "Shuffle (ON)" : "Shuffle (OFF)";
+            shuffleBtn.textContent = shuffle ? "🔁" : "🔀";
         }
+        
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('loadedmetadata', updateProgress);
+        audio.addEventListener('ended', nextSong);
     
-        function showMostListened() {
-            const mostListenedSong = songs.reduce((max, song) => (song.listeners > max.listeners ? song : max), songs[0]);
-            mostListenedCover.src = mostListenedSong.cover;
-            mostListenedTitle.textContent = mostListenedSong.title;
-            mostListenedListeners.textContent = mostListenedSong.listeners;
-            mostListenedModal.style.display = 'flex';
-        }
-    
-        function closeModal() {
-            mostListenedModal.style.display = 'none';
-        }
-    
-        updatePlayer(); // Llamar a la función para actualizar el reproductor al cargar la página
+        shuffle = true;
+        shuffleBtn.textContent = "🔁";
+        currentSongIndex = Math.floor(Math.random() * songs.length);
+        updatePlayer();
     </script>
     
-    
-
 </body>
 </html>
