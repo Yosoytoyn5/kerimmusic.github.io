@@ -41,7 +41,7 @@
             border-radius: 10px;
             margin-bottom: 10px;
             align-self: center;
-            animation: fadeInScale 1.5s ease-out;  /* Añadimos la animación aquí */
+            animation: fadeInScale 1.5s ease-out;
         }
 
         .controls button {
@@ -73,13 +73,13 @@
             font-size: 12px;
         }
         .shuffle-btn {
-    font-size: 18px;
-    color: white;
-    cursor: pointer;
-    background: none;
-    border: none;
-    text-transform: uppercase;
-}
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+            text-transform: uppercase;
+        }
 
         .search-bar {
             margin: 20px;
@@ -99,7 +99,63 @@
             border-color: #f3f3f3;
             box-shadow: 0 0 10px rgba(29, 185, 84, 0.7);
         }
-       
+
+        /* Estilos para la ventana flotante */
+        .playlist-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            color: rgb(0, 0, 0);
+            z-index: 1000;
+        }
+        .playlist-modal ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .playlist-modal li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .playlist-modal li img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .show-playlist-btn {
+            background-color: rgb(0, 0, 0);
+            color: white;
+            font-size: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 <body>
@@ -121,8 +177,18 @@
             <button onclick="nextSong()">⏭</button>
         </div>
         <button class="shuffle-btn" onclick="toggleShuffle()">Shuffle</button>
-
     </div>
+
+    <!-- Ventana flotante de la lista de canciones -->
+    <div class="playlist-modal" id="playlist-modal">
+        <button class="close-btn" onclick="closePlaylist()">×</button>
+        <h3>Lista de Canciones</h3>
+        <ul id="playlist">
+            <!-- Las canciones se agregarán dinámicamente aquí -->
+        </ul>
+    </div>
+
+    <button class="show-playlist-btn" onclick="showPlaylist()">Ver Playlist</button>
 
     <script>
         const audio = document.getElementById('audio');
@@ -133,6 +199,8 @@
         const currentTimeEl = document.getElementById('current-time');
         const totalDurationEl = document.getElementById('total-duration');
         const shuffleBtn = document.querySelector('.shuffle-btn');
+        const playlistModal = document.getElementById('playlist-modal');
+        const playlist = document.getElementById('playlist');
         
         const songs = [
             { title: "Oye Bebe, Sain Nt", src: "https://www.cjoint.com/doc/24_10/NJAsIFmkU1f_Oye-bebe-Sain-Nt-Kerim-Music.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/469294442_122180763968093529_2318484554560596288_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=-MaUV3J70FMQ7kNvgG_cU4l&_nc_oc=AdjB6i5ED_wG4-0J3xzWN4Rzjbx_WkB_TJHHCKVy7Q8dmoQb1LtqDxDjV9cWwVnprjcdumifCqLAKtA2SSkAqYmQ&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=APf6pY0wNfPwlJN8c-SybBv&oh=00_AYEI0KepHazWRJvxn6mKAt_BILSfX1YvYrJzDi07RgWc-A&oe=67CFF5BF" },
@@ -141,7 +209,7 @@
             { title: "Modo avion, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKdtvXSFvdQ_1-Modo-avion-Dany-Zm-El-rencuentro-flac.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/469526904_122180756942093529_4545572876628752884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=_zFJ3-wgZXEQ7kNvgG9UHR8&_nc_oc=AdhkgtJQnagYHt-xFYwaO6mNRWmneH-HolT02rkEUVqgireF70H09EmGL7D2g9jguCgfNTBsn8N2cIhU3NZhQ-5j&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AZnflSBwn6dKB_vC1IiPJBy&oh=00_AYEU7gaRQlz7cw7GNtzn4KLAkoBo2kNcN4ZsdDJD5oEIRQ&oe=67CFF329" },
             { title: "Me estoy muriendo, Clave 462", src: "https://www.cjoint.com/doc/24_11/NKgbdc5rOko_Me-estoy-muriendo-clave-462.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/483488957_122195212382093529_2576876991791910487_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oVcE2hGGuF8Q7kNvgEtVE-T&_nc_oc=Adg3lt1F2_-gz0yf6IlPWF9kE-CopZoQ4dG8xbMAlackBwpqfUVBfB6ZAWGDCsqp2ngg7aWzwLS0dM5VNd5Ai2sH&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=ALUPZhj5JNB7Zl5023MMSjm&oh=00_AYHhG40crHMCDFJxFwG6U-_M5eTaEoZKpemvC_D1KYRjSQ&oe=67D02C03" },
         ];
-        
+
         let currentSongIndex = 0;
         let shuffle = false;
         
@@ -171,25 +239,21 @@
         }
 
         function togglePlayPause() {
-    const playPauseButton = document.getElementById('play-pause-btn'); 
-    if (audio.paused) {
-        audio.play();
-    } else {
-        audio.pause();
-    }
-}
+            const playPauseButton = document.getElementById('play-pause-btn');
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
 
-// Aseguramos que el botón se actualice cuando el audio cambia de estado
-audio.addEventListener('pause', () => {
-    document.getElementById('play-pause-btn').textContent = '⏸';
-});
+        audio.addEventListener('pause', () => {
+            document.getElementById('play-pause-btn').textContent = '⏸';
+        });
 
-audio.addEventListener('play', () => {
-    document.getElementById('play-pause-btn').textContent = '▶';
-});
-
-
-
+        audio.addEventListener('play', () => {
+            document.getElementById('play-pause-btn').textContent = '▶';
+        });
         
         function nextSong() {
             if (shuffle) {
@@ -216,7 +280,7 @@ audio.addEventListener('play', () => {
             currentTimeEl.textContent = formatTime(currentTime);
             totalDurationEl.textContent = formatTime(duration);
         }
-        
+
         function setProgress(event) {
             const width = progressContainer.clientWidth;
             const clickX = event.offsetX;
@@ -229,21 +293,45 @@ audio.addEventListener('play', () => {
             const seconds = Math.floor(time % 60);
             return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
-    
+
         function toggleShuffle() {
             shuffle = !shuffle;
-            shuffleBtn.textContent = shuffle ? "🔁" : "🔀";
+            shuffleBtn.textContent = shuffle++ ? "🔁" : "🔀";
         }
+
+        function showPlaylist() {
+    playlistModal.style.display = "block";
+    playlist.innerHTML = ""; // Limpiar la lista antes de agregar
+
+    // Mezclamos el array de canciones de manera aleatoria
+    const shuffledSongs = [...songs];
+    for (let i = shuffledSongs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledSongs[i], shuffledSongs[j]] = [shuffledSongs[j], shuffledSongs[i]]; // Intercambiamos los elementos
+    }
+
+    // Ahora agregamos las canciones aleatorias a la lista
+    shuffledSongs.forEach((song, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<img src="${song.cover}" alt="${song.title}"> <span>${song.title}</span>`;
+        li.onclick = () => {
+            currentSongIndex = songs.indexOf(song);  // Encontramos el índice correcto de la canción en el array original
+            updatePlayer();  // Actualizamos el reproductor con la canción correcta
+            playlistModal.style.display = "none";  // Cerramos la lista
+        };
+        playlist.appendChild(li);
+    });
+}
+
+
+        function closePlaylist() {
+            playlistModal.style.display = "none";
+        }
+
+        // Iniciar el reproductor con la primera canción
+        updatePlayer();
         
         audio.addEventListener('timeupdate', updateProgress);
-        audio.addEventListener('loadedmetadata', updateProgress);
-        audio.addEventListener('ended', nextSong);
-    
-        shuffle = true;
-        shuffleBtn.textContent = "🔁";
-        currentSongIndex = Math.floor(Math.random() * songs.length);
-        updatePlayer();
     </script>
-    
 </body>
 </html>
