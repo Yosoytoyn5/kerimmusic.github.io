@@ -101,25 +101,32 @@
         }
 
         /* Estilos para la ventana flotante */
-        .playlist-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 400px;
-            color: rgb(0, 0, 0);
-            z-index: 1000;
-        }
-        .playlist-modal ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+.playlist-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    color: rgb(0, 0, 0);
+    z-index: 1000;
+    max-height: 80vh; /* Máxima altura de la ventana flotante */
+    overflow-y: auto; /* Permite desplazamiento vertical */
+}
+
+/* Limitar la altura del listado y permitir el scroll si es necesario */
+.playlist-modal ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 60vh; /* Limita la altura de la lista */
+    overflow-y: auto; /* Añade scroll si hay demasiados elementos */
+}
+
         .playlist-modal li {
             display: flex;
             align-items: center;
@@ -209,6 +216,8 @@
             { title: "Modo avion, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKdtvXSFvdQ_1-Modo-avion-Dany-Zm-El-rencuentro-flac.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/469526904_122180756942093529_4545572876628752884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=_zFJ3-wgZXEQ7kNvgG9UHR8&_nc_oc=AdhkgtJQnagYHt-xFYwaO6mNRWmneH-HolT02rkEUVqgireF70H09EmGL7D2g9jguCgfNTBsn8N2cIhU3NZhQ-5j&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=AZnflSBwn6dKB_vC1IiPJBy&oh=00_AYEU7gaRQlz7cw7GNtzn4KLAkoBo2kNcN4ZsdDJD5oEIRQ&oe=67CFF329" },
             { title: "Me estoy muriendo, Clave 462", src: "https://www.cjoint.com/doc/24_11/NKgbdc5rOko_Me-estoy-muriendo-clave-462.mp3", cover: "https://scontent.fbjx1-1.fna.fbcdn.net/v/t39.30808-6/483488957_122195212382093529_2576876991791910487_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oVcE2hGGuF8Q7kNvgEtVE-T&_nc_oc=Adg3lt1F2_-gz0yf6IlPWF9kE-CopZoQ4dG8xbMAlackBwpqfUVBfB6ZAWGDCsqp2ngg7aWzwLS0dM5VNd5Ai2sH&_nc_zt=23&_nc_ht=scontent.fbjx1-1.fna&_nc_gid=ALUPZhj5JNB7Zl5023MMSjm&oh=00_AYHhG40crHMCDFJxFwG6U-_M5eTaEoZKpemvC_D1KYRjSQ&oe=67D02C03" },
             { title: "Hasta cuando, Dany Zm", src: "https://www.cjoint.com/doc/24_11/NKetDgbJcg5_hasta-cuando-1-dany-zm.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/483488012_122195340008093529_3046655147030201780_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=GFACq9NmFmYQ7kNvgFi1na-&_nc_oc=AdihAw3Pk4ObPV0huBhkvOyRelozlgYLodoAu9vD8VkHyWInbqH-sjXsDoOTrfrap90mJD0efnLZ8WuqrPef_2Xe&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=A5HDdsWZRQh2P2WobWyvalp&oh=00_AYGGipiM9wogWrj1Brqxr6NzZV3ahp-sAGjWwolPhHXbOw&oe=67D10B52" },
+            { title: "Recuerdos, Aizber", src: "https://www.cjoint.com/doc/24_11/NKvsSEB3Xyg_Recuedos-Aizber-Kerim-Music.mp3", cover: "https://scontent.fbjx1-3.fna.fbcdn.net/v/t39.30808-6/481789537_122195353580093529_1287823399222117516_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=rp5AUAnHeXwQ7kNvgEnWWMG&_nc_oc=AdiWqciF_rRaoLzL3WSjsDZUCzHhiwWp-ODyrcwQrwXmbXz6v6FV32XC-uNtyWDkNEoJflJOGRof7PfAVQPFP810&_nc_zt=23&_nc_ht=scontent.fbjx1-3.fna&_nc_gid=AavudW_QagB0oCP-3ZSgAUa&oh=00_AYGDJZo86bUy1FRX2IfMFY9DU5wqcASUKDXE6Nj_sFdpmQ&oe=67D11D97"},
+            { title: "", src: "", cover: ""},
         ];
 
         let currentSongIndex = 0;
