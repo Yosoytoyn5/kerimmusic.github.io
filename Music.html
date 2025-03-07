@@ -73,10 +73,14 @@
             font-size: 12px;
         }
         .shuffle-btn {
-            font-size: 18px;
-            color: white;
-            cursor: pointer;
-        }
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-transform: uppercase;
+}
+
         .search-bar {
             margin: 20px;
             padding: 10px;
@@ -116,7 +120,8 @@
             <button onclick="togglePlayPause()">▶</button>
             <button onclick="nextSong()">⏭</button>
         </div>
-        <button class="shuffle-btn" onclick="toggleShuffle()">🔀</button>
+        <button class="shuffle-btn" onclick="toggleShuffle()">Shuffle</button>
+
     </div>
 
     <script>
