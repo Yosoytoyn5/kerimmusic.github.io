@@ -171,12 +171,12 @@
         <img id="cover" class="cover" src="https://via.placeholder.com/200" alt="Portada del álbum">
         <h2 id="song-title">Título de la Canción</h2>
         <audio id="audio"></audio>
+        <div class="progress-container" onclick="setProgress(event)">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
         <div class="time">
             <span id="current-time">0:00</span>
             <span id="total-duration">0:00</span>
-        </div>
-        <div class="progress-container" onclick="setProgress(event)">
-            <div class="progress-bar" id="progress-bar"></div>
         </div>
         <div class="controls">
             <button onclick="prevSong()">⏮</button>
